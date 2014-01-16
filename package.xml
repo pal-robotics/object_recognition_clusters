@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package>
+  <name>object_recognition_clusters</name>
+  <version>0.0.0</version>
+  <description>The object_recognition_clusters package</description>
+  <maintainer email="bence.magyar@pal-robotics.com">Bence Magyar</maintainer>
+  <license>BSD</license>
+  <author email="bence.magyar@pal-robotics.com">Bence Magyar</author>
+  <author>Kaijen Hsiao</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>object_recognition_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>tf2</build_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>object_recognition_msgs</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>tf2</run_depend>
+
+  <export>
+  </export>
+</package>
