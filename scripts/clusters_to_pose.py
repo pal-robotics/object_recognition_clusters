@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # Software License Agreement (BSD License)
 #
-# Copyright (c) 2009, Willow Garage, Inc.
+# Copyright (c) 2014, PAL Robotics SL.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
 #    copyright notice, this list of conditions and the following
 #    disclaimer in the documentation and/or other materials provided
 #    with the distribution.
-#  * Neither the name of the Willow Garage nor the names of its
+#  * Neither the name of the PAL Robotics nor the names of its
 #    contributors may be used to endorse or promote products derived
 #    from this software without specific prior written permission.
 #
@@ -31,13 +31,10 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 #
-# author: Kaijen Hsiao
+# author: Bence Magyar
 
-## @package pyexample
-#Offers a service to find the principal directions and bounding box of a 
-#point cluster
+#Offers a service to find the principal directions and bounding box of a point cluster
 
-#import roslib
 import rospy
 import tf
 from object_recognition_msgs.msg import RecognizedObjectArray
