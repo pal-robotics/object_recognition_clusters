@@ -45,16 +45,18 @@ import math
 import scipy.linalg
 from geometry_msgs.msg import PoseStamped, Point, Pose, Vector3
 from convert_functions import *
+import geometry_msgs
 
 ## class for using PCA to find the principal directions and bounding
 # box for a point cluster
 class ClusterBoundingBoxFinder:
 
-    def __init__(self, tf_listener, tf_broadcaster): 
+    def __init__(self, tf_listener, tf_broadcaster, base_frame=""): 
         assert(tf_listener)
         assert(tf_broadcaster)
         self.tf_listener = tf_listener
         self.tf_broadcaster = tf_broadcaster
+        self.base_frame = base_frame
 
     ##run eigenvector PCA for a 2xn scipy matrix, return the directions 
     #(list of 2x1 scipy arrays)
@@ -131,7 +133,9 @@ class ClusterBoundingBoxFinder:
         #get the name of the frame to use with z-axis being "up" or "normal to surface" 
         #(the cluster will be transformed to this frame, and the resulting box z will be this frame's z)
         #if param is not set, assumes the point cloud's frame is such
-        self.base_frame = rospy.get_param("~z_up_frame", point_cloud.header.frame_id)
+        # if it was given in as init arg, use that
+        if self.base_frame == "": 
+          self.base_frame = rospy.get_param("~z_up_frame", point_cloud.header.frame_id)
 
         #convert from PointCloud to 4xn scipy matrix in the base_frame
         cluster_frame = point_cloud.header.frame_id
@@ -198,7 +202,17 @@ class ClusterBoundingBoxFinder:
         (object_frame_pos, object_frame_quat) = mat_to_pos_and_quat(object_to_cluster_frame)
         self.tf_broadcaster.sendTransform(object_frame_pos, object_frame_quat, rospy.Time.now(), "object_frame", cluster_frame) 
 
-        return (object_points, object_bounding_box_dims, object_bounding_box, object_to_base_frame, object_to_cluster_frame)
+        object_pose = PoseStamped()
+        object_pose.pose.position.x = object_frame_pos[0]
+        object_pose.pose.position.y = object_frame_pos[1]
+        object_pose.pose.position.z = object_frame_pos[2]
+        object_pose.pose.orientation.x = object_frame_quat[0]
+        object_pose.pose.orientation.y = object_frame_quat[1]
+        object_pose.pose.orientation.z = object_frame_quat[2]
+        object_pose.pose.orientation.w = object_frame_quat[3]
+        object_pose.header.frame_id = cluster_frame
+
+        return (object_points, object_bounding_box_dims, object_bounding_box, object_pose)
 
 
     
