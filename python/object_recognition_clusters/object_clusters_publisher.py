@@ -6,7 +6,7 @@ from ecto import BlackBoxCellInfo as CellInfo, BlackBoxForward as Forward
 from object_recognition_core.io.sink import SinkBase
 from object_recognition_ros import init_ros
 from object_recognition_ros.ecto_cells.ecto_object_recognition_msgs import Publisher_RecognizedObjectArray
-from object_recognition_ros.ecto_cells.io_ros import PointCloudMsgAssembler
+from object_recognition_clusters.ecto_cells.io_clusters import PointCloudMsgAssembler
 import ecto
 
 ########################################################################################################################
