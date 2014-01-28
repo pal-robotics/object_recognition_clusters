@@ -33,29 +33,24 @@
  *
  */
 
-#include <vector>
+ /* Author: Bence Magyar
+  * Email:  bence.magyar@pal-robotics.com
+  */
 
+#include <vector>
 #include <boost/foreach.hpp>
 
 #include <ecto/ecto.hpp>
-
-#include <Eigen/Geometry>
-#include <Eigen/StdVector>
-
 #include <opencv2/core/core.hpp>
 
 // ROS includes
 #include <sensor_msgs/Image.h>
 #include <object_recognition_msgs/RecognizedObjectArray.h>
-
-#include <object_recognition_core/common/pose_result.h>
-#include <object_recognition_core/common/types.h>
-
 #include <pcl_conversions/pcl_conversions.h>
 
 namespace object_recognition_clusters
 {
-  /** Cell that takes
+  /** Cell that takes the output of the tabletop pipeline and publishes the clusters nested in a recognizedobjectarray for later fill-up.
   */
   struct PointCloudMsgAssembler {
     static void
@@ -120,9 +115,7 @@ namespace object_recognition_clusters
         }
       }
 
-      // Export the message as final
       *output_msg_ = msg;
-
       return ecto::OK;
     }
   private:

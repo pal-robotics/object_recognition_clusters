@@ -13,7 +13,6 @@
   <build_depend>object_recognition_msgs</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>rospy</build_depend>
-  <build_depend>tf2</build_depend>
   <build_depend>tf</build_depend>
   <build_depend>ecto</build_depend>
   <build_depend>ecto_ros</build_depend>
@@ -22,7 +21,6 @@
   <run_depend>object_recognition_msgs</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>rospy</run_depend>
-  <run_depend>tf2</run_depend>
   <run_depend>tf</run_depend>
   <run_depend>ecto</run_depend>
   <run_depend>ecto_ros</run_depend>
