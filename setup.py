@@ -5,7 +5,7 @@ from catkin_pkg.python_setup import generate_distutils_setup
 
 d = generate_distutils_setup(
    packages=['object_recognition_clusters'],
-   package_dir={'': 'python'}
+   package_dir={'': 'src'}
 )
 
 setup(**d)

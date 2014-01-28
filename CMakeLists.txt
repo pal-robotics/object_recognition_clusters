@@ -9,11 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_python_setup()
 
-add_subdirectory(python)
-
 set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE 1)
-
-add_subdirectory(src)
 
 catkin_package(
 #  INCLUDE_DIRS include
@@ -21,6 +17,9 @@ catkin_package(
 #  CATKIN_DEPENDS geometry_msgs object_recognition_msgs roscpp rospy tf2
 #  DEPENDS system_lib
 )
+
+add_subdirectory(src)
+
 
 include_directories(
   ${catkin_INCLUDE_DIRS}

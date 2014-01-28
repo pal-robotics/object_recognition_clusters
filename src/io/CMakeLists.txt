@@ -1,8 +1,4 @@
-# create the cells to output messages
-find_package(Eigen REQUIRED)
-
 include_directories(SYSTEM
-                    ${EIGEN_INCLUDE_DIRS}
                     ${ecto_ros_INCLUDE_DIRS}
                     ${catkin_INCLUDE_DIRS}
                     ${geometry_msgs_INCLUDE_DIRS}
@@ -10,7 +6,7 @@ include_directories(SYSTEM
 )
 
 ectomodule(io_clusters DESTINATION ${PROJECT_NAME}/ecto_cells
-                  INSTALL
+           INSTALL
            module.cpp
            PointCloudMsgAssembler.cpp
 )
