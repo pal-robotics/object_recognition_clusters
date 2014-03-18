@@ -51,24 +51,28 @@ import geometry_msgs
 # box for a point cluster
 class ClusterBoundingBoxFinder:
 
-    def __init__(self, tf_listener, tf_broadcaster, base_frame=""): 
+    def __init__(self, tf_listener, tf_broadcaster, base_frame=""):
         assert(tf_listener)
         assert(tf_broadcaster)
         self.tf_listener = tf_listener
         self.tf_broadcaster = tf_broadcaster
         self.base_frame = base_frame
+        #get the name of the frame to use with z-axis being "up" or "normal to surface"
+        #(the cluster will be transformed to this frame, and the resulting box z will be this frame's z)
+        if self.base_frame == "":
+          self.base_frame = rospy.get_param("~z_up_frame", "")
 
-    ##run eigenvector PCA for a 2xn scipy matrix, return the directions 
+    ##run eigenvector PCA for a 2xn scipy matrix, return the directions
     #(list of 2x1 scipy arrays)
     def pca(self, points):
         cov_mat = points[0:3,:] * points[0:3,:].T/scipy.shape(points)[1]
         (values, vectors) = scipy.linalg.eig(cov_mat)
         if values[1] >  values[0]:
-            directions = [vectors[:,1], vectors[:,0]] 
+            directions = [vectors[:,1], vectors[:,0]]
         else:
             directions = [vectors[:,0], vectors[:,1]]
 
-        return directions 
+        return directions
 
 
     ##shift the points to be around the mean for x and y (matrix is 4xn)
@@ -77,7 +81,7 @@ class ClusterBoundingBoxFinder:
         shifted_points = points.copy()
         for i in range(2):
             mean[i] = scipy.mean(points[i,:])
-            shifted_points[i,:] -= mean[i]    
+            shifted_points[i,:] -= mean[i]
         return (shifted_points, mean)
 
 
@@ -99,13 +103,13 @@ class ClusterBoundingBoxFinder:
             #chop off the top points if they are more than empty_space_width away from the bounding box edge
             ind = int(math.floor(num_points*(1-check_percent)))
             if points_sorted[dim, -1] - points_sorted[dim, ind] > empty_space_width:
-                
+
                 #find the first point that isn't within edge_width of the point at ind, and lop off all points after
                 searcharr = scipy.array(points_sorted[dim, :]).flatten()
                 searchval = points_sorted[dim, ind] + edge_width
                 thres_ind = scipy.searchsorted(searcharr, searchval)
                 if thres_ind != 0 and thres_ind != len(searcharr):
-                    points_filtered = points_sorted[:, 0:thres_ind] 
+                    points_filtered = points_sorted[:, 0:thres_ind]
                     rospy.loginfo("chopped points off of dim %d, highest val = %5.3f, searchval = %5.3f"%(dim, points_sorted[dim, -1], searchval))
             else:
                 points_filtered = points_sorted
@@ -114,7 +118,7 @@ class ClusterBoundingBoxFinder:
             if dim != 2:
                 ind = int(math.floor(num_points*check_percent))
                 if points_filtered[dim, ind] - points_filtered[dim, 0] > empty_space_width:
-                    
+
                     #find the first point that isn't within edge_width of the point at ind, and lop off all points before
                     searcharr = scipy.array(points_sorted[dim, :]).flatten()
                     searchval = points_sorted[dim, ind] - edge_width
@@ -129,12 +133,10 @@ class ClusterBoundingBoxFinder:
     #use the local rosparam z_up_frame to specify the desired frame to use where the z-axis is special (box z will be frame z)
     #if not specified, the point cloud's frame is assumed to be the desired z_up_frame
     def find_object_frame_and_bounding_box(self, point_cloud):
-        
-        #get the name of the frame to use with z-axis being "up" or "normal to surface" 
-        #(the cluster will be transformed to this frame, and the resulting box z will be this frame's z)
+
         #if param is not set, assumes the point cloud's frame is such
         # if it was given in as init arg, use that
-        if self.base_frame == "": 
+        if self.base_frame == "":
           self.base_frame = rospy.get_param("~z_up_frame", point_cloud.header.frame_id)
 
         #convert from PointCloud to 4xn scipy matrix in the base_frame
@@ -153,7 +155,7 @@ class ClusterBoundingBoxFinder:
         directions = self.pca(shifted_points[0:2, :])
 
         #convert the points to object frame:
-        #rotate all the points about z so that the shortest direction is parallel to the y-axis (long side of object is parallel to x-axis) 
+        #rotate all the points about z so that the shortest direction is parallel to the y-axis (long side of object is parallel to x-axis)
         #and translate them so that the table height is z=0 (x and y are already centered around the object mean)
         y_axis = scipy.mat([directions[1][0], directions[1][1], 0.])
         z_axis = scipy.mat([0.,0.,1.])
@@ -200,7 +202,7 @@ class ClusterBoundingBoxFinder:
 
         #broadcast the object frame to tf
         (object_frame_pos, object_frame_quat) = mat_to_pos_and_quat(object_to_cluster_frame)
-        self.tf_broadcaster.sendTransform(object_frame_pos, object_frame_quat, rospy.Time.now(), "object_frame", cluster_frame) 
+        self.tf_broadcaster.sendTransform(object_frame_pos, object_frame_quat, rospy.Time.now(), "object_frame", cluster_frame)
 
         object_pose = PoseStamped()
         object_pose.pose.position.x = object_frame_pos[0]
@@ -214,5 +216,3 @@ class ClusterBoundingBoxFinder:
 
         return (object_points, object_bounding_box_dims, object_bounding_box, object_pose)
 
-
-    
