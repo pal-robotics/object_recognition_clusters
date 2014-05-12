@@ -202,7 +202,7 @@ class ClusterBoundingBoxFinder:
 
         #broadcast the object frame to tf
         (object_frame_pos, object_frame_quat) = mat_to_pos_and_quat(object_to_cluster_frame)
-        self.tf_broadcaster.sendTransform(object_frame_pos, object_frame_quat, rospy.Time.now(), "object_frame", cluster_frame)
+        #self.tf_broadcaster.sendTransform(object_frame_pos, object_frame_quat, rospy.Time.now(), "object_frame", cluster_frame)
 
         object_pose = PoseStamped()
         object_pose.pose.position.x = object_frame_pos[0]
