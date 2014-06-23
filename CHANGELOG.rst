@@ -2,8 +2,8 @@
 Changelog for package object_recognition_clusters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.0 (2014-06-23)
+------------------
 * Adding minimum version of sensor_msgs package
 * Commented out debugging TF publishing.
   Was giving a continuous warning looking like: Unable to transform object from frame 'object_frame' to planning frame '/odom' (Lookup would require extrapolation into the past.  Requested time 82.933000000 but the earliest data is at time 96.737000000, when looking up transform from frame [object_frame] to frame [odom])
